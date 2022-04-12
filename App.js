@@ -1,19 +1,39 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import Header from './components/Header';
+import StartGameScreen from './screens/StartGameScreen';
+import GameScreen from './screens/GameScreen';
+import React, {useState} from 'react';
+import { useFonts } from 'expo-font';
+import AppLoading from 'expo-app-loading';
 
 export default function App() {
+  const [userNumber, setUserNumber] = useState()
+  const [loaded] = useFonts({
+    OpenSans: require('./assets/fonts/OpenSans-Regular.ttf'),
+    OpenSansBold: require('./assets/fonts/OpenSans-Bold.ttf'),
+  })
+  if(!loaded) return <AppLoading/>
+
+  const handlerStartGame = selectedNumber => {
+    setUserNumber(selectedNumber)
+  }
+
+  let content = <StartGameScreen onStartGame={handlerStartGame} />
+
+  if (userNumber) {
+    content = <GameScreen/>
+  }
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+    <View style={styles.screen}>
+      <Header title={"Adivina el Número"}/>
+      {content}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
